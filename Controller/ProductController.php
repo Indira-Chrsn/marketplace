@@ -31,8 +31,8 @@ class ProductController {
     }
 
     // update
-    public function updateProduct($product) {
-        return $this->model->updateProduct($product);
+    public function updateProduct($id, $product) {
+        return $this->model->updateProduct($id, $product);
     }
 
     // delete

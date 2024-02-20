@@ -25,25 +25,25 @@ class Database {
     }
 
     // get product
-    public function getAllProduct() {
+    public function getAllData() {
         try {
             $stmt = $this->conn->prepare("SELECT * FROM ($this->table) WHERE deleted_at IS NULL");
             $stmt->execute();
-            $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $products;
+            $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $datas;
         } catch (PDOException $e){
             echo "Error: " . $e->getMessage();
         }
     }
 
-    // get product by id
-    public function getProductById($id) {
+    // get Data by id
+    public function getDataById($id) {
         try {
             $stmt = $this->conn->prepare("SELECT * FROM ($this->table) WHERE id =:id");
             $stmt->bindParam(':id', $id);
             $stmt->execute();
-            $product = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $product;
+            $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $data;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
         }
@@ -52,17 +52,17 @@ class Database {
     // get softdeleted data
     public function getSoftDeletedData() {
         try {
-            $stmt = $this->conn->prepare("SELECT * FROM ($this->table) WHERE deleted_at IS NOT NULL");
+            $stmt = $this->conn->prepare("SELECT * FROM $this->table WHERE deleted_at IS NOT NULL");
             $stmt->execute();
-            $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $products;
+            $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $datas;
         } catch (PDOException $e) {
             echo "ERROR: " . $e->getMessage();
         }
     }
 
     // create
-    public function createProduct($columns, $columnValues) {
+    public function createData($columns, $columnValues) {
         $collPlaceHolders = implode(', ', $columns);
 
         $values = implode(', ', array_map(function($col) {
@@ -75,10 +75,6 @@ class Database {
             for ($i = 0; $i < count($columns); $i++) {
                 $stmt->bindParam(':' . $columns[$i], $columnValues[$i]);
             }
-            // $stmt->bindParam(':product_name', $columnValues[0]);
-            // $stmt->bindParam(':price', $columnValues[1]);
-            // $stmt->bindParam(':quantity', $quantity);
-            // $stmt->bindParam(':description', $description);
             $stmt->execute();
             header("Location: ../index.php");
             exit();
@@ -88,15 +84,20 @@ class Database {
     }
 
     // update
-    public function updateProduct($product) {
+    public function updateData($id, $columns, $columnValues) {
+        $columnPlaceholders = array_map(function($col, $val) {
+            return "$col=:$val";
+        }, $columns, $columns);
+
+        $sql = implode(', ', $columnPlaceholders);
+
         try {
-            var_dump($product);
-            $stmt = $this->conn->prepare("UPDATE $this->table SET product_name=:product_name, price=:price, quantity=:quantity, description=:description WHERE id=:id");
-            $stmt->bindParam(':product_name', $product["product_name"]);
-            $stmt->bindParam(':price', $product["price"]);
-            $stmt->bindParam(':quantity', $product["quantity"]);
-            $stmt->bindParam(':description', $product["description"]);
-            $stmt->bindParam(':id', $product["id"]);
+            $stmt = $this->conn->prepare("UPDATE $this->table SET $sql WHERE id=:id");
+            
+            for ($i = 0; $i < count($columns); $i++) {
+                $stmt->bindParam(':' . $columns[$i], $columnValues[$i]);
+            }
+            $stmt->bindParam(':id', $id);
             $stmt->execute();
             header("Location: ../index.php");
             exit();

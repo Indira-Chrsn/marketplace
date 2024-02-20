@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         'quantity' => $_POST["quantity"],
         'description' => $_POST["description"]
     );
-    $productController->updateProduct($product);
+    $productController->updateProduct($id, $product);
 }
 
 ?>

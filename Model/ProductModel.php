@@ -15,12 +15,12 @@ class ProductModel {
 
     // GetAll
     public function GetAllProduct() {
-        return $this->db->getAllProduct();
+        return $this->db->getAllData();
     }
 
     // get by id
     public function GetProductById($id) {
-        return $this->db->getProductById($id);
+        return $this->db->getDataById($id);
     }
 
     // get deleted product
@@ -36,12 +36,17 @@ class ProductModel {
             $collValues[] = $value;
         }
 
-        return $this->db->createProduct($this->createColls, $collValues);
+        return $this->db->createData($this->createColls, $collValues);
     }
 
     // update
-    public function updateProduct($product) {
-        return $this->db->updateProduct($product);
+    public function updateProduct($id, $product) {
+        $collValues = array ();
+        foreach ($product as $value) {
+            $collValues[] = $value;
+        }
+
+        return $this->db->updateData($id, $this->createColls, $collValues);
     }
 
     // delete
