@@ -25,7 +25,7 @@ class Database {
     }
 
     // get product
-    public function getAllData($queryFilter) {
+    public function getAllData($queryFilter = "") {
         try {
             $stmt = $this->conn->prepare("SELECT * FROM ($this->table)$queryFilter");
             $stmt->execute();
