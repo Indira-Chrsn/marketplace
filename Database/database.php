@@ -25,9 +25,9 @@ class Database {
     }
 
     // get product
-    public function getAllData() {
+    public function getAllData($queryFilter) {
         try {
-            $stmt = $this->conn->prepare("SELECT * FROM ($this->table) WHERE deleted_at IS NULL");
+            $stmt = $this->conn->prepare("SELECT * FROM ($this->table)$queryFilter");
             $stmt->execute();
             $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $datas;

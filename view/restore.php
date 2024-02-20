@@ -4,7 +4,7 @@ include PROJECT_ROOT . '/Controller/ProductController.php';
 
 $productController = new ProductController();
 
-$products = $productController->getSoftDeletedProducts();
+$products = $productController->getAllProduct("WHERE deleted_at IS NOT NULL");
 
 // if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //     $ids = $_POST["restore_selected"];
@@ -59,13 +59,13 @@ $products = $productController->getSoftDeletedProducts();
                     <td><?php echo $product["price"] ?></td>
                     <td><?php echo $product["quantity"] ?></td>
                     <td><?php echo $product["description"] ?></td>
-                    <td>
-                        <!-- <form action="restore_data.php" method="post"> -->
+                    <!-- <td>
+                        <form action="restore_data.php" method="post">
                             <input type="hidden" name="restore_selected[]" value="<?php echo $product["id"]; ?>">
-                            <!-- <input type="hidden" name="isMultiple" value="false"> -->
+                            <input type="hidden" name="isMultiple" value="false">
                             <input type="submit" style="border: none;" value="Restore">
-                        <!-- </form> -->
-                    </td>
+                        </form>
+                    </td> -->
                     <td>
                         <input type="checkbox" name="restore_selected[]" value="<?php echo $product["id"] ?>">
                     </td>

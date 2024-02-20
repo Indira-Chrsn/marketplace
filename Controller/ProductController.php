@@ -11,8 +11,8 @@ class ProductController {
     }
 
     // getAll
-    public function getAllProduct() {
-        return $this->model->GetAllProduct();
+    public function getAllProduct($getQueryFilter) {
+        return $this->model->GetAllProduct($getQueryFilter);
     }
 
     // get by id

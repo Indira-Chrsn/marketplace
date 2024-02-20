@@ -4,7 +4,7 @@ include PROJECT_ROOT . '/Controller/ProductController.php';
 
 $productController = new ProductController();
 
-$products = $productController->getAllProduct();
+$products = $productController->getAllProduct("WHERE deleted_at IS NULL");
 
 /*
 $sql = "SELECT * FROM products WHERE deleted_at IS NULL";

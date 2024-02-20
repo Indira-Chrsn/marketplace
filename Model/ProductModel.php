@@ -6,6 +6,8 @@ class ProductModel {
     private $fillable = ['id', 'product_name', 'price', 'quantity', 'description'];
     private $createColls = ['product_name', 'price', 'quantity', 'description'];
 
+    private $getAllQueryFilter = "WHERE deleted_at IS NULL";
+
     private $db;
 
     public function __construct($table) {
@@ -14,8 +16,8 @@ class ProductModel {
     }
 
     // GetAll
-    public function GetAllProduct() {
-        return $this->db->getAllData();
+    public function GetAllProduct($getQueryFilter) {
+        return $this->db->getAllData($getQueryFilter);
     }
 
     // get by id
