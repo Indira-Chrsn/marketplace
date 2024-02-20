@@ -6,6 +6,11 @@ $productController = new ProductController();
 
 $products = $productController->getSoftDeletedProducts();
 
+// if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//     $ids = $_POST["restore_selected"];
+//     $productController->multipleRestore($ids);
+//     header("Location: ../index.php");
+// }
 ?>
 
 <!DOCTYPE html>
@@ -34,6 +39,7 @@ $products = $productController->getSoftDeletedProducts();
     <a href="../index.php">Back to Product List</a>
     <br><br>
 
+    <form action="restore_data.php" method="post">
     <table>
         <tr>
             <th>No</th>
@@ -54,10 +60,14 @@ $products = $productController->getSoftDeletedProducts();
                     <td><?php echo $product["quantity"] ?></td>
                     <td><?php echo $product["description"] ?></td>
                     <td>
-                        <form action="restore_data.php" method="post">
-                            <input type="hidden" name="id" value="<?php echo $product["id"]; ?>">
+                        <!-- <form action="restore_data.php" method="post"> -->
+                            <input type="hidden" name="restore_selected[]" value="<?php echo $product["id"]; ?>">
+                            <!-- <input type="hidden" name="isMultiple" value="false"> -->
                             <input type="submit" style="border: none;" value="Restore">
-                        </form>
+                        <!-- </form> -->
+                    </td>
+                    <td>
+                        <input type="checkbox" name="restore_selected[]" value="<?php echo $product["id"] ?>">
                     </td>
                 </tr>
                 <?php $counter++ ?>
@@ -68,5 +78,7 @@ $products = $productController->getSoftDeletedProducts();
             </tr>
         <?php endif ?>
     </table>
+    <input type="submit" value="restore selected products">
+    </form>
 </body>
 </html>

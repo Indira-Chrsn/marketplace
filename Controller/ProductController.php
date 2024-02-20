@@ -1,12 +1,13 @@
 <?php
-include PROJECT_ROOT . '/Model/product.php';
+include PROJECT_ROOT . '/Model/ProductModel.php';
 
 class ProductController {
-
+    private $table;
     private $model;
 
     public function __construct() {
-        $this->model = new ProductModel();
+        $this->table = "products";
+        $this->model = new ProductModel($this->table);
     }
 
     // getAll
@@ -42,6 +43,16 @@ class ProductController {
     // recover
     public function recoverProduct($id) {
         return $this->model->restoreProduct($id);
+    }
+
+    // multiple delete
+    public function multipleDelete($ids) {
+        return $this->model->multipleDelete($ids);
+    }
+
+    // multiple restore
+    public function multipleRestore($ids) {
+        return $this->model->multipleRestore($ids);
     }
 }
 

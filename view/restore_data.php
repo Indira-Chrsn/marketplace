@@ -4,8 +4,15 @@ include PROJECT_ROOT . '/Controller/ProductController.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $productController = new ProductController();
-    $id = $_POST['id'];
+
+    $ids = $_POST["restore_selected"];
     
-    $productController->recoverProduct($id);
+    if (count($ids) == 1) {
+        $productController->recoverProduct($ids[0]);
+    }else {
+        $ids = $_POST["restore_selected"];
+        $productController->multipleRestore($ids);
+    }
+    header("Location: ../index.php");
 }
 ?>

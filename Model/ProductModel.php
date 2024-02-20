@@ -2,12 +2,15 @@
 include PROJECT_ROOT . '/Database/database.php';
 
 class ProductModel {
+    private $table;
     private $fillable = ['id', 'product_name', 'price', 'quantity', 'description'];
+    private $createColls = ['product_name', 'price', 'quantity', 'description'];
 
     private $db;
 
-    public function __construct() {
-        $this->db = new Database();
+    public function __construct($table) {
+        $this->table = $table;
+        $this->db = new Database($this->table);
     }
 
     // GetAll
@@ -27,8 +30,13 @@ class ProductModel {
 
     // create
     public function addProduct($product) {
-        var_dump($product);
-        return $this->db->createProduct($product['product_name'], $product['price'], $product['quantity'], $product['description']);
+        // var_dump($product);
+        $collValues = array();
+        foreach ($product as $value) {
+            $collValues[] = $value;
+        }
+
+        return $this->db->createProduct($this->createColls, $collValues);
     }
 
     // update
@@ -44,6 +52,16 @@ class ProductModel {
     // recover
     public function restoreProduct($id) {
         return $this->db->restoreDeletedProduct($id);
+    }
+
+    // multiple delete
+    public function multipleDelete($ids) {
+        return $this->db->deleteMultipleProducts($ids);
+    }
+
+    // multiple restore
+    public function multipleRestore($ids) {
+        return $this->db->restoreMultipleProducts($ids);
     }
 }
 
