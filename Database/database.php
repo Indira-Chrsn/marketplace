@@ -24,7 +24,7 @@ class Database {
         return $this->conn->query($sql);
     }
 
-    // get product
+    // get data
     public function getAllData($queryFilter = "") {
         try {
             $stmt = $this->conn->prepare("SELECT * FROM ($this->table)$queryFilter");
@@ -46,18 +46,6 @@ class Database {
             return $data;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
-        }
-    }
-
-    // get softdeleted data
-    public function getSoftDeletedData() {
-        try {
-            $stmt = $this->conn->prepare("SELECT * FROM $this->table WHERE deleted_at IS NOT NULL");
-            $stmt->execute();
-            $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            return $datas;
-        } catch (PDOException $e) {
-            echo "ERROR: " . $e->getMessage();
         }
     }
 
@@ -106,36 +94,14 @@ class Database {
         }
     }
 
-    // delete
-    public function deleteProduct($id) {
-        try {
-            $stmt = $this->conn->prepare("UPDATE $this->table SET deleted_at = NOW() WHERE id=:id");
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            header("Location: ../index.php");
-            exit();
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage;
-        }
-    }
-
-    // restore
-    public function restoreDeletedProduct($id) {
-        try {
-            $stmt = $this->conn->prepare("UPDATE $this->table SET deleted_at = NULL WHERE id=:id");
-            $stmt->bindParam(':id', $id);
-            $stmt->execute();
-            header("Location: ../index.php");
-            exit();
-        } catch (PDOExcception $e){
-            echo "Error: " . $e->getMessage();
-        }
-    }
-
     // multiple delete
     public function deleteMultipleProducts($ids) {
         $placeHolders = [];
         $values = [];
+
+        if (!is_array($ids)) {
+            $ids = array($ids);
+        }
 
         foreach ($ids as $id) {
             $placeHolders[] = '?';
@@ -147,6 +113,8 @@ class Database {
         try {
             $stmt = $this->conn->prepare("UPDATE $this->table SET deleted_at = NOW() WHERE id IN ($placeHolderString)");
             $stmt->execute($values);
+            header("Location: ../index.php");
+            exit();
         } catch (PDOEXception $e) {
             echo "Error: " . $e->getMessage();
         }

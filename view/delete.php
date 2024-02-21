@@ -4,18 +4,21 @@ include('../Controller/ProductController.php');
 
 $productController = new ProductController();
 
-$id = $_GET['id'];
-$ids = $_POST["delete_selected"];
-
-$stringIds = implode(', ',$ids);
-
-$sql = "WHERE id IN ($stringIds)";
-
-if (is_null($id)) {
-    $products = $productController->getAllProduct($sql);
+if (isset($_GET["delete_selected"])) {
+    $ids = $_GET["delete_selected"];
+} else if (isset($_POST["delete_selected"])){
+    $ids = $_POST["delete_selected"];
 }
 
-$product = $productController->getProductById($id);
+if (count($ids) > 1) {
+    $stringIds = implode(', ',$ids);
+    $sql = "WHERE id IN ($stringIds)";
+} else {
+    $sql = "WHERE id = " . $ids[0];
+}
+
+$products = $productController->getAllProduct($sql);
+// $product = $productController->getProductById($id);
 
 // try {
 //     $stmt = $db->conn->prepare("SELECT * FROM products WHERE id = :id");
@@ -31,8 +34,10 @@ $product = $productController->getProductById($id);
 //     echo "Error: " . $e->getMessage();
 // }
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    $productController->deleteProduct($_POST['id']);
+    // $productController->deleteProduct($_POST['id']);
+    $selected_products = explode(', ', $_POST['selected_products']);
+
+    $productController->multipleDelete($selected_products);
 }
 
 ?>
@@ -50,32 +55,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <a href="../index.php">Back to Product List</a>
         <br><br>
 
-            <p>Are you sure you want to delete the following product?</p>
+        <p>Are you sure you want to delete the following product?</p>
+
+        <form action="" method="post">
             <table>
-                <tr>
-                    <td>ID:</td>
-                    <td><?php echo $product["id"]; ?></td>
-                </tr>
-                <tr>
-                    <td>Product Name:</td>
-                    <td><?php echo $product["product_name"]; ?></td>
-                </tr>
-                <tr>
-                    <td>Price:</td>
-                    <td>$<?php echo $product["price"]; ?></td>
-                </tr>
-                <tr>
-                    <td>Quantity:</td>
-                    <td><?php echo $product["quantity"]; ?></td>
-                </tr>
-                <tr>
-                    <td>description:</td>
-                    <td><?php echo $product["description"]; ?></td>
-                </tr>
+                <?php if (count($products) > 0) : ?>
+                    <?php foreach ($products as $product) : ?>
+                        <?php $ids[] = $product['id']; ?>
+                        <tr>
+                            <td>ID:</td>
+                            <td><?php echo $product["id"]; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Product Name:</td>
+                            <td><?php echo $product["product_name"]; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Price:</td>
+                            <td>$<?php echo $product["price"]; ?></td>
+                        </tr>
+                        <tr>
+                            <td>Quantity:</td>
+                            <td><?php echo $product["quantity"]; ?></td>
+                        </tr>
+                        <tr>
+                            <td>description:</td>
+                            <td><?php echo $product["description"]; ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                <?php else : ?>
+                    <tr>
+                        <td colspan="5">0 result</td>
+                    </tr>
+                <?php endif ?>
             </table>
-            <form action="" method="post">
-                <input type="hidden" name="id" value="<?php echo $product['id']; ?>">
-                <input type="submit" value="Delete">
-            </form>
+            <?php 
+                $selectedProducts = implode(', ',$ids);
+                if (count($ids) == 1) {
+                    $selectedProducts = $ids[0];
+                }
+            ?>
+            <input type="hidden" name="selected_products" value="<?php echo $selectedProducts ?>">
+            <input type="submit" value="Delete">
+        </form>
     </body>
 </html>

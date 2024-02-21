@@ -63,9 +63,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <th>No</th>
                 <th>Product Name</th>
                 <th>Price</th>
-                <th>Quantity</th>
-                <th>Action</th>
+                <th style="width: 10%">Quantity</th>
                 <th>Total Price</th>
+                <th style="width: 15%">Action</th>
                 <th></th>
             </tr>
 
@@ -79,15 +79,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <td><?php echo $product["price"] ?></td>
                         <td><?php echo $product["quantity"] ?></td>
                         <td><?php echo $totalPrice ?></td>
-                        <td>
+                        <td >
                             <a href="view/detail.php?id=<?php echo $product["id"] ?>">View</a>
                             <a href="view/update.php?id=<?php echo $product["id"] ?>">Update</a>
-                            <a href="view/delete.php?id=<?php echo $product["id"] ?>">Delete</a>
+                            <a href="view/delete.php?delete_selected[]=<?php echo $product["id"] ?>">Delete</a>
                         </td>
                         <td>
                             <input type="checkbox" name="delete_selected[]" value="<?php echo $product["id"] ?>">
                         </td>
                     </tr>
+                    
                     <?php $counter++ ?>
                 <?php endforeach ?>
             <?php else : ?>
@@ -97,6 +98,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php endif ?>
         </table>
         <input type="submit" value="Delete selected products">
-    </form>
+        </form>
 </body>
 </html>
