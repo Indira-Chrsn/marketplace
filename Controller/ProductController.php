@@ -55,30 +55,4 @@ class ProductController {
         return $this->model->multipleRestore($ids);
     }
 }
-
-/*
-    // create
-    function create($db, $product) {
-        $db->createProduct($db->conn, $product);
-        $productName = $product->productName;
-        $price = $product->price;
-        $quantity = $product->quantity;
-        $description = $product->description;
-    }
-
-    // update
-    function update($db, $product) {
-        $db->updateProduct($db->conn, $product);
-    }
-
-    // delete
-    function delete($db, $id) {
-        $db->deleteProduct($db->conn, $id);
-    }
-
-    // restore
-    function restore($db, $id) {
-        $db->restoreDeletedProduct($db->conn, $id);
-    }
-*/
 ?>

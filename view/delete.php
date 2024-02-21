@@ -5,6 +5,15 @@ include('../Controller/ProductController.php');
 $productController = new ProductController();
 
 $id = $_GET['id'];
+$ids = $_POST["delete_selected"];
+
+$stringIds = implode(', ',$ids);
+
+$sql = "WHERE id IN ($stringIds)";
+
+if (is_null($id)) {
+    $products = $productController->getAllProduct($sql);
+}
 
 $product = $productController->getProductById($id);
 
@@ -22,6 +31,7 @@ $product = $productController->getProductById($id);
 //     echo "Error: " . $e->getMessage();
 // }
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
     $productController->deleteProduct($_POST['id']);
 }
 
